@@ -1,4 +1,4 @@
-# Software Quality and Dependibility
+# Software Quality and Dependability
 
 ## Project #2
 
