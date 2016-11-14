@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>InsulinCalculator.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;InsulinCalculatorTomcat&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">mei.qcs.insulincalculator</a> &gt; <span class="el_source">InsulinCalculator.java</span></div><h1>InsulinCalculator.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package mei.qcs.insulincalculator;
+
+import static java.lang.Math.round;
+import javax.jws.WebService;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+
+/**
+ *
+ * @author Joao
+ */
+@WebService(serviceName = &quot;InsulinCalculator&quot;, targetNamespace=&quot;http://insulincalculator-aybareon.rhcloud.com/InsulinCalculatorTomcat&quot;)
+<span class="fc" id="L18">public class InsulinCalculator implements InsulinDoseCalculator{</span>
+
+    public void InsulinCalculator(){
+        
+<span class="nc" id="L22">    }</span>
+    /**
+     * This is a sample web service operation
+     * @param txt
+     * @return 
+     */
+    @WebMethod(operationName = &quot;hello&quot;)
+    public String hello(@WebParam(name = &quot;name&quot;) String txt) {
+<span class="nc" id="L30">        return &quot;Hello &quot; + txt + &quot; !&quot;;</span>
+    }
+    
+    /**
+     *
+     * @param carbohydrateAmount
+     * @param carbohydrateToInsulinRatio
+     * @param preMealBloodSugar
+     * @param targetBloodSugar
+     * @param personalSensitivity
+     * @return
+     */
+    @WebMethod(operationName = &quot;mealtimeInsulinDose&quot;)
+    @Override
+    public int mealtimeInsulinDose(
+            @WebParam(name = &quot;carbohydrateAmount&quot;)int carbohydrateAmount, 
+            @WebParam(name = &quot;carbohydrateToInsulinRatio&quot;)int carbohydrateToInsulinRatio,
+            @WebParam(name = &quot;preMealBloodSugar&quot;)int preMealBloodSugar, 
+            @WebParam(name = &quot;targetBloodSugar&quot;)int targetBloodSugar, 
+            @WebParam(name = &quot;personalSensitivity&quot;)int personalSensitivity){
+        
+        
+        try{
+            
+            //verificar se os parametros estao em ordem antes de prosseguir
+<span class="fc bfc" id="L55" title="All 2 branches covered.">            if(checkParam(carbohydrateAmount,1)&lt;0){</span>
+<span class="fc" id="L56">                System.out.println(&quot;Parametro [carbohydrateAmount] invalido&quot;);</span>
+<span class="fc" id="L57">                return -1;</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">            }else if(checkParam(carbohydrateToInsulinRatio,2)&lt;0){</span>
+<span class="fc" id="L59">                System.out.println(&quot;Parametro [carbohydrateToInsulinRatio] invalido&quot;);</span>
+<span class="fc" id="L60">                return -1;</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">            }else if(checkParam(preMealBloodSugar,3)&lt;0){</span>
+<span class="fc" id="L62">                System.out.println(&quot;Parametro preMealBloodSugar] invalido&quot;);</span>
+<span class="fc" id="L63">                return -1;</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">            }else if(checkParam(targetBloodSugar,4)&lt;0){</span>
+<span class="fc" id="L65">                System.out.println(&quot;Parametro [targetBloodSugar] invalido&quot;);</span>
+<span class="fc" id="L66">                return -1;</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">            }else if(checkParam(personalSensitivity,5)&lt;0){</span>
+<span class="fc" id="L68">                System.out.println(&quot;Parametro [personalSensitivity] invalido&quot;);</span>
+<span class="fc" id="L69">                return -1;</span>
+            }
+            
+            double carbohydrateDose;
+            double bloodSugarDose;
+            double dose;
+            
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">            if(preMealBloodSugar &lt; targetBloodSugar){</span>
+<span class="nc" id="L77">                return 0;</span>
+            }
+
+            //o cast para double e importante para garantir que as operacoes feitas sao de virgula flutuante
+<span class="fc" id="L81">            carbohydrateDose = (double)carbohydrateAmount / carbohydrateToInsulinRatio / personalSensitivity * 50;</span>
+            
+<span class="fc" id="L83">            bloodSugarDose = (double)(preMealBloodSugar - targetBloodSugar)/personalSensitivity;</span>
+
+<span class="fc" id="L85">            dose = carbohydrateDose + bloodSugarDose;</span>
+            
+<span class="fc" id="L87">            System.out.println(&quot;Carbohydrate dose: &quot;+carbohydrateDose + &quot;\nBloodSugarDose: &quot;+bloodSugarDose + &quot;\nValue: &quot;+ dose);</span>
+
+<span class="fc" id="L89">            return (int)round(dose);//ter em atenção a este cast...verificar valores para não haver asneira</span>
+<span class="nc" id="L90">        }catch(Exception e){</span>
+<span class="nc" id="L91">            System.out.println(&quot;Error: &quot;+e);</span>
+        }
+        
+<span class="nc" id="L94">        return -1;  </span>
+    }
+    
+    /**
+     *
+     * @param bodyWeight
+     * @return
+     */
+    @WebMethod(operationName = &quot;backgroundInsulinDose&quot;)
+    @Override
+    public int backgroundInsulinDose(@WebParam(name = &quot;bodyWeight&quot;)int bodyWeight){
+        
+        
+        try{
+<span class="fc bfc" id="L108" title="All 2 branches covered.">            if(checkParam(bodyWeight,6)&lt;0) {</span>
+<span class="fc" id="L109">                System.out.println(&quot;Parametro bodyWeight invalido&quot;);</span>
+<span class="fc" id="L110">                return -1;</span>
+            }
+            
+            double dose;
+            
+<span class="fc" id="L115">            dose = 0.5*0.55*(double)bodyWeight;</span>
+            
+<span class="fc" id="L117">            return (int)round(dose);//ter em atenção a este cast...verificar valores para não haver asneira</span>
+<span class="nc" id="L118">        }catch(Exception e){</span>
+<span class="nc" id="L119">            System.out.println(&quot;Error: &quot; + e);</span>
+        }
+  
+<span class="nc" id="L122">        return -1;</span>
+    }
+    
+    /**
+     *
+     * @param physicalActivityLevel
+     * @param physicalActivitySamples
+     * @param bloodSugarDropSamples
+     * @return
+     */
+    @WebMethod (operationName = &quot;personalSensitivityToInsulin&quot;)
+    @Override
+    public int personalSensitivityToInsulin(
+            @WebParam(name = &quot;physicalActivityLevel&quot;) int physicalActivityLevel, 
+            @WebParam(name = &quot;physicalActivitySamples&quot;) int[] physicalActivitySamples, 
+            @WebParam(name = &quot;bloodSugarDropSamples&quot;) int[] bloodSugarDropSamples){
+        
+        
+        
+        
+<span class="fc" id="L142">        int sensitivity = -2;//return</span>
+        
+        try{
+<span class="fc bfc" id="L145" title="All 2 branches covered.">            if(checkParam(physicalActivityLevel,7)&lt;0) {</span>
+<span class="fc" id="L146">                System.out.println(&quot;Parametro [physicalActivityLevel] invalido&quot;);</span>
+<span class="fc" id="L147">                return -1;</span>
+            }else{
+<span class="fc bfc" id="L149" title="All 2 branches covered.">                for(int i = 0;i&lt;physicalActivitySamples.length;i++){</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">                    if(checkParam(physicalActivitySamples[i],8)&lt;0) {</span>
+<span class="fc" id="L151">                        System.out.println(&quot;Parametro [physicalActivitySamples&quot; + physicalActivitySamples[i] + &quot;] invalido&quot; );</span>
+<span class="fc" id="L152">                        return -1;</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">                    }else if(checkParam(bloodSugarDropSamples[i],9)&lt;0) {</span>
+<span class="fc" id="L154">                        System.out.println(&quot;Parametro [bloodSugarDropSamples&quot; + bloodSugarDropSamples[i] + &quot;] invalido&quot; );</span>
+<span class="fc" id="L155">                        return -1;</span>
+                    }
+                }
+            }
+            
+            double physicalActivitySamplesMean;
+            double bloodSugarDropSamplesMean; 
+            double beta, alpha;//parametros do least squares
+<span class="fc" id="L163">            double betaDenominator = 0;</span>
+<span class="fc" id="L164">            double betaDivisor = 0;</span>
+            //o tamanho dos arrays tem de ser igual
+<span class="fc bfc" id="L166" title="All 2 branches covered.">            if(physicalActivitySamples.length != bloodSugarDropSamples.length){</span>
+<span class="fc" id="L167">                return -1;</span>
+            }
+
+<span class="fc" id="L170">            physicalActivitySamplesMean = myMean(physicalActivitySamples);</span>
+<span class="fc" id="L171">            bloodSugarDropSamplesMean = myMean(physicalActivitySamples);</span>
+            /*wikipedia nao e grande fonte, mas tem referencia com sentido, por isso vamos ter esperanca: 
+            https://en.wikipedia.org/wiki/Simple_linear_regression
+            ref: Kenney, J. F. and Keeping, E. S. (1962) &quot;Linear Regression and Correlation.&quot; Ch. 15 in Mathematics of Statistics, Pt. 1, 3rd ed. Princeton, NJ: Van Nostrand, pp. 252–285
+            */
+<span class="fc bfc" id="L176" title="All 2 branches covered.">            for(int i=0;i&lt;physicalActivitySamples.length;i++){</span>
+<span class="pc bpc" id="L177" title="2 of 4 branches missed.">                if((physicalActivitySamples[i] &lt; 0) || bloodSugarDropSamples[i] &lt; 0){</span>
+<span class="nc" id="L178">                    return -1;</span>
+                }
+<span class="fc" id="L180">                betaDenominator += (physicalActivitySamples[i]-physicalActivitySamplesMean)*(bloodSugarDropSamples[i]-bloodSugarDropSamplesMean);</span>
+<span class="fc" id="L181">                betaDivisor += (physicalActivitySamples[i]-physicalActivitySamplesMean)*(physicalActivitySamples[i]-physicalActivitySamplesMean);</span>
+            }
+<span class="fc" id="L183">            beta = betaDenominator /betaDivisor;</span>
+
+<span class="fc" id="L185">            alpha = bloodSugarDropSamplesMean - beta*physicalActivitySamplesMean;</span>
+
+
+<span class="fc" id="L188">            sensitivity = (int)(alpha + beta * physicalActivityLevel);</span>
+      
+<span class="nc" id="L190">        }catch(Exception e){</span>
+<span class="nc" id="L191">            System.out.println(&quot;Error: &quot;+e);</span>
+<span class="nc" id="L192">            return -1;</span>
+<span class="fc" id="L193">        }</span>
+        
+<span class="fc" id="L195">        return (int)round(sensitivity);</span>
+        
+    }
+    
+    private double myMean(int [] someArray){
+<span class="fc" id="L200">        int sum = 0;</span>
+<span class="fc" id="L201">        double mean = 0;</span>
+        
+<span class="fc bfc" id="L203" title="All 2 branches covered.">        for(int i = 0;i&lt; someArray.length;i++){</span>
+<span class="fc" id="L204">            sum = someArray[i];</span>
+        }
+<span class="fc" id="L206">        mean = sum/someArray.length;</span>
+        
+<span class="fc" id="L208">        return mean;</span>
+    }
+    
+    private int checkParam(int paramToCheck, int type){
+<span class="pc bpc" id="L212" title="1 of 10 branches missed.">        switch(type){</span>
+            //gramas de carbohidratos(entre 60 e 120)
+            case(1):
+<span class="fc bfc" id="L215" title="All 4 branches covered.">                if(paramToCheck&lt;60 || paramToCheck&gt;120){</span>
+<span class="fc" id="L216">                    return -1;</span>
+                }break;
+            //relacao de carbohidratos processados por unidade de insulina(entre 10 e 15 g/unidade)
+            case(2):
+<span class="fc bfc" id="L220" title="All 4 branches covered.">                if(paramToCheck&lt;10 || paramToCheck&gt;15){</span>
+<span class="fc" id="L221">                    return -1;</span>
+                }break;
+            //nivel de acucar no sangue antes da refeicao (entre 120 e 250mg/dl)
+            case(3):
+<span class="fc bfc" id="L225" title="All 4 branches covered.">                if(paramToCheck&lt;120 || paramToCheck&gt;250){</span>
+<span class="fc" id="L226">                    return -1;</span>
+                }break;
+            //nivel de acucar no sangue pretendido antes da refeicao (entre 80 e 120mg/dl)
+            case(4):
+<span class="fc bfc" id="L230" title="All 4 branches covered.">                if(paramToCheck&lt;80 || paramToCheck&gt;120){</span>
+<span class="fc" id="L231">                    return -1;</span>
+                }break;
+            //sensibilidade individual(entre 15 e 100mg/dl)
+            case(5):
+<span class="fc bfc" id="L235" title="All 4 branches covered.">                if(paramToCheck&lt;15 || paramToCheck&gt;100){</span>
+<span class="fc" id="L236">                    return -1;</span>
+                }break;
+            //peso (entre 40 e 130 kg)
+            case(6):
+<span class="fc bfc" id="L240" title="All 4 branches covered.">                if(paramToCheck&lt;40 || paramToCheck&gt;130){</span>
+<span class="fc" id="L241">                    return -1;</span>
+                }break;
+            //nivel de actividade fisica diaria (entre 0 e 10)
+            case(7):
+<span class="fc bfc" id="L245" title="All 4 branches covered.">                if(paramToCheck&lt;0 || paramToCheck&gt;10){</span>
+<span class="fc" id="L246">                    return -1;</span>
+                }break;
+            //nivel de uma sample de actividade fisica (entre 0 e 10)
+            case(8):
+<span class="fc bfc" id="L250" title="All 4 branches covered.">                if(paramToCheck&lt;0 || paramToCheck&gt;10){</span>
+<span class="fc" id="L251">                    return -1;</span>
+                }break;
+            //amostra da perda de acucar no sangue por unidade de insulina (entre 15 e 100mg/dl)
+            case(9):
+<span class="fc bfc" id="L255" title="All 4 branches covered.">                if(paramToCheck&lt;15 || paramToCheck&gt;100){</span>
+<span class="fc" id="L256">                    return -1;</span>
+                }break;
+<span class="nc" id="L258">            default:System.out.println(&quot;Some programming error&quot;);break;</span>
+        }
+        
+<span class="fc" id="L261">        return 0;</span>
+    }
+    
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
